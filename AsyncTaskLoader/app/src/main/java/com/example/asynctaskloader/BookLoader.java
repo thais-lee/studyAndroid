@@ -1,10 +1,11 @@
 package com.example.asynctaskloader;
-import android.content.AsyncTaskLoader;
+
 import android.content.Context;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
 
 public class BookLoader extends AsyncTaskLoader<String> {
+
     private String mQueryString;
 
     BookLoader(Context context, String queryString) {

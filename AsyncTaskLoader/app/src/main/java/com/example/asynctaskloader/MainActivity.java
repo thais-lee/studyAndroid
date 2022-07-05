@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mBookInput;
     private TextView mTitleText;
     private TextView mAuthorText;
+    private BookLoaderCallbacks bookLoaderCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         mBookInput = (EditText) findViewById(R.id.bookInput);
         mTitleText = (TextView) findViewById(R.id.titleText);
         mAuthorText = (TextView) findViewById(R.id.authorText);
+        bookLoaderCallbacks = new BookLoaderCallbacks(MainActivity.this, mBookInput, mTitleText, mAuthorText);
+
+        if(getSupportLoaderManager().getLoader(0) != null){
+            getSupportLoaderManager().initLoader(0, null, bookLoaderCallbacks);
+        }
     }
 
     public void searchBooks(View view) {
@@ -48,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (networkInfo != null && networkInfo.isConnected()
                 && queryString.length() != 0) {
-            new FetchBook(mTitleText, mAuthorText).execute(queryString);
+
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString("queryString", queryString);
+            getSupportLoaderManager().restartLoader(0, queryBundle, bookLoaderCallbacks);
 
             mAuthorText.setText("");
             mTitleText.setText(R.string.loading);
